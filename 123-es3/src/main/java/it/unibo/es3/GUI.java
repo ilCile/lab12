@@ -1,37 +1,46 @@
 package it.unibo.es3;
 
 import javax.swing.*;
-import java.awt.event.*;
 import java.awt.*;
 import java.util.*;
-import java.util.List;
 
 public class GUI extends JFrame {
     
-    private final List<JButton> cells = new ArrayList<>();
+    private final Map<Pair<Integer, Integer>, JButton> cells = new HashMap<>();
+    private final Logics logics;
     
     public GUI(int width) {
+        logics = new LogicsImpl(width);
+
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setSize(70*width, 70*width);
         
-        JPanel panel = new JPanel(new GridLayout(width,width));
-        this.getContentPane().add(panel);
-        
-        ActionListener al = e -> {
-            var jb = (JButton)e.getSource();
-        	jb.setText(String.valueOf(cells.indexOf(jb)));
-        };
-                
+        JPanel panel = new JPanel(new GridLayout(width,width));           
         for (int i=0; i<width; i++){
             for (int j=0; j<width; j++){
-            	var pos = new Pair<>(j,i);
-                final JButton jb = new JButton(pos.toString());
-                this.cells.add(jb);
-                jb.addActionListener(al);
+                final JButton jb = new JButton();
+                cells.put(new Pair<>(i, j), jb);          
                 panel.add(jb);
             }
         }
+
+        for (var jb : logics.start()) {
+            cells.get(jb).setText("*");
+        }
+
+        final JButton button = new JButton(">");
+        this.getContentPane().add(BorderLayout.CENTER,panel);
+        this.getContentPane().add(BorderLayout.SOUTH,button);
         this.setVisible(true);
+
+        button.addActionListener(e -> {
+            for (var jb : logics.update()) {
+                cells.get(jb).setText("*");
+            }
+            if (logics.toQuit()) {
+                System.exit(1);
+            }
+        });
     }
     
 }
