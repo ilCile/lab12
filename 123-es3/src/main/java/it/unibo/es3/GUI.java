@@ -8,6 +8,7 @@ public class GUI extends JFrame {
     
     private final Map<Pair<Integer, Integer>, JButton> cells = new HashMap<>();
     private final Logics logics;
+    private final static int STARTING_ELEMENTS = 3;
     
     public GUI(int width) {
         logics = new LogicsImpl(width);
@@ -24,9 +25,7 @@ public class GUI extends JFrame {
             }
         }
 
-        for (var jb : logics.start()) {
-            cells.get(jb).setText("*");
-        }
+        logics.start(STARTING_ELEMENTS).stream().forEach(x -> cells.get(x).setText("*"));
 
         final JButton button = new JButton(">");
         this.getContentPane().add(BorderLayout.CENTER,panel);
@@ -34,11 +33,9 @@ public class GUI extends JFrame {
         this.setVisible(true);
 
         button.addActionListener(e -> {
-            for (var jb : logics.update()) {
-                cells.get(jb).setText("*");
-            }
+            logics.update().stream().forEach(x -> cells.get(x).setText("*"));
             if (logics.toQuit()) {
-                System.exit(1);
+                System.exit(0);
             }
         });
     }

@@ -12,15 +12,15 @@ public interface Logics {
     
     /**
      * 
-     * @return the list of position to be updated
+     * @return the list of position to be updated externally
      */
     List<Pair<Integer, Integer>> update();
 
     /**
-     * 
-     * @return a list of 3 position that inditicates the starting elements
+     * @param n the number of starting position to be updated
+     * @return a list of n position that inditicates the starting elements
      */
-    List<Pair<Integer, Integer>> start();
+    List<Pair<Integer, Integer>> start(int n);
 
     /**
      * 
